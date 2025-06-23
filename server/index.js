@@ -1,44 +1,44 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-const express = require("express");
-const bodyParser = require("body-parser");
-const midtransClient = require("midtrans-client");
-const path = require("path");
+// server/index.js
+import express from "express";
+import cors from "cors";
+import midtransClient from "midtrans-client";
 
 const app = express();
-const PORT = 3000;
+const port = 3000;
 
-// Konfigurasi Midtrans
+app.use(cors());
+app.use(express.json());
+
 const snap = new midtransClient.Snap({
   isProduction: false,
-  serverKey: 'SB-Mid-server-bKGGsi7eO6oa2dvUMkByVHBH', 
+  serverKey: "SB-Mid-server-bKGGsi7eO6oa2dvUMkByVHBH", // Ganti dengan serverKey Midtrans kamu
 });
 
-app.use(bodyParser.json());
-app.use(express.static("public"));
-
 app.post("/create-transaction", async (req, res) => {
-  const { orderId, harga, name, email } = req.body;
-
-  const parameter = {
-    transaction_details: {
-      order_id: orderId,
-      harga: harga,
-    },
-    customer_details: {
-      first_name: name,
-      email: email,
-    },
-  };
+  const { orderId, grossAmount, name, email } = req.body;
 
   try {
+    const parameter = {
+      transaction_details: {
+        order_id: orderId,
+        gross_amount: grossAmount,
+      },
+      customer_details: {
+        first_name: name,
+        email: email,
+      },
+    };
+
     const transaction = await snap.createTransaction(parameter);
     res.json({ token: transaction.token });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: "Gagal membuat transaksi" });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`✅ Backend berjalan di http://localhost:${port}`);
 });

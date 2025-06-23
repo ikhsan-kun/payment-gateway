@@ -7,14 +7,17 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "node server/index.js"
   },
   "dependencies": {
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "framer-motion": "^12.18.1",
     "midtrans": "^1.0.7",
+    "midtrans-client": "^1.4.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "recharts": "^2.15.3"
